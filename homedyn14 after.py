@@ -1,5 +1,3 @@
-#Исходный код: Модель https://chatgptchatapp.com
-
 def count_numbers_with_consecutive_zeros(K: int, N: int) -> int:
     """
     Подсчет K-ичных чисел из N разрядов с двумя+ подряд нулями
@@ -10,14 +8,16 @@ def count_numbers_with_consecutive_zeros(K: int, N: int) -> int:
     
     Returns:
         Количество чисел, удовлетворяющих условию
+    
+    Raises:
+        ValueError: Если параметры K или N выходят за допустимые пределы
     """
     if not 2 <= K <= 10:
         raise ValueError("K должно быть от 2 до 10")
+        
     if not 2 <= N <= 19:
         raise ValueError("N должно быть от 2 до 19")
 
-    # dp[i][0] - числа длины i, оканчивающиеся на 0
-    # dp[i][1] - числа длины i, оканчивающиеся не на 0
     dp = [[0, 0] for _ in range(N + 1)]
     dp[1][0] = 1    # "0"
     dp[1][1] = K - 1 # "1".."K-1"
@@ -30,8 +30,27 @@ def count_numbers_with_consecutive_zeros(K: int, N: int) -> int:
     valid = dp[N][0] + dp[N][1] # Числа без двух подряд нулей
     return total - valid
 
-result = count_numbers_with_consecutive_zeros(3, 5)
-print(result)
 
-# Вывод документации с использованием артибута __doc__:
-print(count_numbers_with_consecutive_zeros.__doc__)
+def main():
+    """Основная функция для взаимодействия с пользователем"""
+    print("Подсчет K-ичных чисел из N разрядов с двумя и более подряд нулями")
+    
+    while True:
+        try:
+            K = int(input("Введите основание системы счисления K (2-10): "))
+            N = int(input("Введите количество разрядов N (2-19): "))
+            
+            result = count_numbers_with_consecutive_zeros(K, N)
+            print(f"Количество чисел: {result}")
+            break
+            
+        except ValueError as e:
+            print(f"Ошибка: {e}\nПожалуйста, попробуйте снова.\n")
+            
+        except Exception as e:
+            print(f"Неожиданная ошибка: {e}")
+            break
+
+
+if __name__ == "__main__":
+    main()

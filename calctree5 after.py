@@ -1,10 +1,10 @@
-class TreeNode:
+class TreeNodeClass:
     """Класс для представления узла бинарного дерева выражений.
     
     Attributes:
         value (int): Значение узла (операнд или код операции)
-        left (TreeNode): Левый потомок
-        right (TreeNode): Правый потомок
+        left (TreeNodeClass): Левый потомок
+        right (TreeNodeClass): Правый потомок
     """
     def __init__(self, value: int):
         self.value = value
@@ -12,7 +12,7 @@ class TreeNode:
         self.right = None
 
 
-def build_expression_tree(tokens: list[str]) -> TreeNode:
+def build_expression_tree(tokens: list[str]) -> TreeNodeClass:
     """Строит дерево выражения из префиксной записи.
     
     Args:
@@ -24,7 +24,7 @@ def build_expression_tree(tokens: list[str]) -> TreeNode:
     Raises:
         ValueError: Если выражение содержит недопустимые токены
     """
-    def rec() -> TreeNode:
+    def rec() -> TreeNodeClass:
         """Рекурсивное построение дерева."""
         nonlocal index
         if index >= len(tokens):
@@ -34,9 +34,9 @@ def build_expression_tree(tokens: list[str]) -> TreeNode:
         index += 1
         
         if token.isdigit():
-            return TreeNode(int(token))
+            return TreeNodeClass(int(token))
         try:
-            node = TreeNode(operation_to_code(token))
+            node = TreeNodeClass(operation_to_code(token))
             node.left = rec()
             node.right = rec()
             return node
@@ -67,7 +67,7 @@ def operation_to_code(op: str) -> int:
     }[op]
 
 
-def evaluate_tree(node: TreeNode) -> int:
+def evaluate_tree(node: TreeNodeClass) -> int:
     """Вычисляет значение поддерева.
     
     Args:
@@ -81,19 +81,19 @@ def evaluate_tree(node: TreeNode) -> int:
     """
     if node is None:
         return 0
-    if node.value >= 0:  # Операнд
+    if node.value >= 0: 
         return node.value
     
     left_val = evaluate_tree(node.left)
     right_val = evaluate_tree(node.right)
     
-    if node.value == -1:  # Сложение
+    if node.value == -1: 
         return left_val + right_val
-    elif node.value == -2:  # Вычитание
+    elif node.value == -2: 
         return left_val - right_val
-    elif node.value == -3:  # Умножение
+    elif node.value == -3: 
         return left_val * right_val
-    elif node.value == -4:  # Деление
+    elif node.value == -4:  
         return left_val // right_val
     else:
         raise ValueError(f"Неизвестная операция: {node.value}")
@@ -106,27 +106,27 @@ def replace_add_sub_with_values(node: TreeNode) -> TreeNode:
         node: Корень дерева для преобразования
         
     Returns:
-        TreeNode: Корень преобразованного дерева
+        TreeNodeClass: Корень преобразованного дерева
     """
     if node is None:
         return None
     
-    if node.value in (-1, -2):  # Сложение или вычитание
-        return TreeNode(evaluate_tree(node))
+    if node.value in (-1, -2): 
+        return TreeNodeClass(evaluate_tree(node))
     
     node.left = replace_add_sub_with_values(node.left)
     node.right = replace_add_sub_with_values(node.right)
     return node
 
 
-def process_expression(filename: str) -> TreeNode:
+def process_expression(filename: str) -> TreeNodeClass:
     """Обрабатывает выражение из файла и возвращает преобразованное дерево.
     
     Args:
         filename: Путь к файлу с выражением
         
     Returns:
-        TreeNode: Корень преобразованного дерева
+        TreeNodeClass: Корень преобразованного дерева
         
     Raises:
         IOError: Если файл не может быть прочитан
@@ -151,22 +151,12 @@ def process_expression(filename: str) -> TreeNode:
 
 if __name__ == "__main__":
     try:
-        # Создаем тестовый файл
         with open('expression.txt', 'w') as f:
-            f.write("+ * 3 4 - 5 2")  # Пример: (3*4)+(5-2)
+            f.write("+ * 3 4 - 5 2")  
         
-        # Обрабатываем выражение
         root = process_expression('expression.txt')
         print("Преобразование выполнено успешно")
         print(root)
         
     except Exception as e:
         print(f"Ошибка: {e}")
-
-# Вывод документации с использованием артибута __doc__:
-print(TreeNode.__doc__)
-print(build_expression_tree.__doc__)
-print(operation_to_code.__doc__)
-print(evaluate_tree.__doc__)
-print(replace_add_sub_with_values.__doc__)
-print(process_expression.__doc__)

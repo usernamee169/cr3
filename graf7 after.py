@@ -73,4 +73,4 @@ if __name__ == "__main__":
         result = find_common_cities(filename, city1, city2, hops)
         print("Результат:", result)
     except Exception as e:
-        print(f"Ошибка:"{e})
+        print(f"Ошибка:{e}")
